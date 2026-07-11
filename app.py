@@ -22,30 +22,69 @@ if uploaded_file is not None:
     "Column Name": df.columns
     }))
 
-
     st.success("✅ Dataset Loaded Successfully!")
+    st.subheader("📊 Dashboard KPIs")
+    total_policies = len(df)
 
+    issued_policies = df[df["status"] == "Issued"].shape[0]
+
+    failed_policies = df[df["status"] == "Failed"].shape[0]
+    pending_policies = df[df["status"] == "Pending"].shape[0]
+
+    total_premium = df["premium_amount"].sum()
+
+    avg_processing_time = df["processing_time_hours"].mean()
+        
+        
+    col1, col2, col3 = st.columns(3)
+
+    col1.metric("Total Policies", f"{total_policies:,}")
+    col2.metric("Issued Policies", f"{issued_policies:,}")
+    col3.metric("Failed Policies", f"{failed_policies:,}")
+
+    col4, col5, col6 = st.columns(3)
+
+    col4.metric("Pending Policies", f"{pending_policies:,}")
+
+    col5.metric("Total Premium", f"₹ {total_premium:,.2f}")
+
+    col6.metric("Avg Processing Time", f"{avg_processing_time:.2f} hrs")
+
+    ## Dataset
     st.subheader("Dataset Preview")
     st.dataframe(df)
 
-    st.subheader("🔍 Dataset Exploration")
+    # Policy status distribution
+    st.subheader("📊 Policy Status Distribution")
 
-    st.write("Status Values")
-    st.write(df["status"].unique())
+    status_count = (
+        df["status"]
+        .value_counts()
+        .reset_index()
+    )
 
-    st.write("Policy Types")
-    st.write(df["policy_type"].unique())
+    status_count.columns = ["Status", "Count"]
 
-    st.write("Application Date Sample")
-    st.write(df["application_date"].head())
+    fig = px.bar(
+        status_count,
+        x="Status",
+        y="Count",
+        title="Policies by Status",
+        text="Count"
+    )
 
-    col1, col2, col3 = st.columns(3)
+    st.plotly_chart(fig, use_container_width=True)
 
-    with col1:
-        st.metric("Rows", df.shape[0])
 
-    with col2:
-        st.metric("Columns", df.shape[1])
+    with st.expander("🔍 Dataset Exploration (Developer View)"):
 
-    with col3:
-        st.metric("Missing Values", df.isnull().sum().sum())
+        st.write("Status Values")
+        st.write(df["status"].unique())
+
+        st.write("Policy Types")
+        st.write(df["policy_type"].unique())
+
+        st.write("Application Date Sample")
+        st.write(df["application_date"].head())
+
+    

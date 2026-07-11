@@ -1,19 +1,22 @@
-# AI Insurance Policy Analytics Assistant
+# AI Insurance Policy Analytics
 
-An AI-powered Insurance Operations Dashboard built using:
+An AI-powered insurance analytics dashboard built using Python, Streamlit, Plotly, SQL, and Generative AI.
+
+## Tech Stack
 
 - Python
-- Streamlit
 - Pandas
+- Streamlit
 - Plotly
 - SQL
 - Power BI
-- AI (Coming Soon)
+- Git & GitHub
+- Generative AI (Coming Soon)
 
 ## Features
 
 - Upload Insurance CSV
-- Dashboard KPIs
+- KPI Dashboard
 - Policy Analysis
 - Failure Analysis
-- AI Business Assistant (In Progress)
+- AI-powered Business Insights
