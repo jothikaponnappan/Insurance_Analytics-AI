@@ -188,33 +188,61 @@ if uploaded_file is not None:
     if st.button("Analyze with AI"):
 
         if question:
+            dataset_summary = f"""
+            Insurance Dataset Summary
+
+            Total Policies: {total_policies}
+            Issued Policies: {issued_policies}
+            Failed Policies: {failed_policies}
+            Pending Policies: {pending_policies}
+
+            Total Premium:
+            ₹{total_premium:,.2f}
+
+            Average Processing Time:
+            {avg_processing_time:.2f} hours
+
+            Top Failure Reasons:
+
+            {failure_reason.to_string(index=False)}
+
+            Premium By Policy Type
+
+            {premium_by_policy.to_string(index=False)}
+
+            Processing Time By Policy Type
+
+            {process_df.to_string(index=False)}
+
+            Premium By Region
+
+            {region_df.to_string(index=False)}
+            """
             prompt = f"""
-                You are an Insurance Business Analyst.
+                You are a Senior Insurance Business Analyst.
 
-                Dataset Summary:
+            Analyze ONLY the dataset provided below.
 
-                Total Policies: {total_policies}
-                Issued Policies: {issued_policies}
-                Failed Policies: {failed_policies}
-                Pending Policies: {pending_policies}
+            {dataset_summary}
 
-                Top Failure Reasons:
-                {failure_reason.to_string(index=False)}
+            User Question:
+            {question}
 
-                Average Processing Time:
-                {avg_processing_time:.2f} hours
+            Instructions:
 
-                Question:
-                {question}
+            - Use only the dataset provided.
+            - Do not make assumptions.
+            - If information is unavailable, clearly state it.
+            - Explain the findings in simple business language.
 
-                Answer only based on the insurance dataset above.
+            Provide:
 
-                Provide:
-                1. Key Insights
-                2. Root Cause
-                3. Business Recommendation
-                4. Executive Summary
-                """
+            1. Key Insights
+            2. Root Cause
+            3. Business Impact
+            4. Recommendations
+            5. Executive Summary
+            """
             with st.spinner("🤖 AI is analyzing your data..."):
                 response = ask_gemini(prompt)
 
