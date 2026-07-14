@@ -1,6 +1,7 @@
 import streamlit as st
 import pandas as pd
 import plotly.express as px
+from gemini_helper import ask_gemini
 
 st.set_page_config(
     page_title="AI Insurance Analytics",
@@ -175,6 +176,51 @@ if uploaded_file is not None:
     )
 
     st.plotly_chart(fig_process, use_container_width=True)
+
+    st.markdown("---")
+    st.header("🤖 AI Insurance Assistant")
+
+    question = st.text_area(
+        "Ask a business question",
+        placeholder="Example: Why are policies failing?"
+    )
+
+    if st.button("Analyze with AI"):
+
+        if question:
+            prompt = f"""
+                You are an Insurance Business Analyst.
+
+                Dataset Summary:
+
+                Total Policies: {total_policies}
+                Issued Policies: {issued_policies}
+                Failed Policies: {failed_policies}
+                Pending Policies: {pending_policies}
+
+                Top Failure Reasons:
+                {failure_reason.to_string(index=False)}
+
+                Average Processing Time:
+                {avg_processing_time:.2f} hours
+
+                Question:
+                {question}
+
+                Answer only based on the insurance dataset above.
+
+                Provide:
+                1. Key Insights
+                2. Root Cause
+                3. Business Recommendation
+                4. Executive Summary
+                """
+            with st.spinner("🤖 AI is analyzing your data..."):
+                response = ask_gemini(prompt)
+
+            st.success("Analysis Complete")
+
+            st.markdown(response)
 
      ## Dataset
     st.subheader("Dataset Preview")
